@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/Christian-Cardozo/webServer/issues"
   },
-  "homepage": "https://github.com/Christian-Cardozo/webServer#readme"
+  "homepage": "https://github.com/Christian-Cardozo/webServer#readme",
+  "dependencies": {
+    "express-handlebars": "^5.3.4",
+    "got": "^11.8.2"
+  }
 }
