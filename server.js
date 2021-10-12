@@ -20,6 +20,7 @@ app.engine('hbs', handlebars({
 }));
 
 app.use(express.static('public'))
+app.use(express.static(__dirname + '/assets/'));
 
 app.get('/', (req, res) => {
     //Serves the body of the page aka "main.handlebars" to the container //aka "index.handlebars"
@@ -28,29 +29,43 @@ app.get('/', (req, res) => {
 
 app.get('/productos', async (req, res) => {
 
-    const { body } = await got.get('http://127.0.0.1:8080/api/productos')
+    try {
+        const { body } = await got.get('http://127.0.0.1:8080/api/productos')
 
-    //Serves the body of the page aka "main.handlebars" to the container //aka "index.handlebars"
-    res.render('products', { layout: 'index', products: JSON.parse(body), listExists: body });
+        //Serves the body of the page aka "main.handlebars" to the container //aka "index.handlebars"
+        res.render('products', { layout: 'index', products: JSON.parse(body), listExists: body });
+    }
+    catch (error) {
+        res.render('error', { layout: 'index', error })
+    }
 });
 
 app.get('/producto/nuevo', async (req, res) => {
 
     //Serves the body of the page aka "main.handlebars" to the container //aka "index.handlebars"
-    res.render('newProduct', { layout: 'index'});
+    res.render('newProduct', { layout: 'index' });
+});
+
+app.get('/error', (req, res) => {
+    res.render('error', { layout: 'index' });
 });
 
 app.post('/productos', async (req, res) => {
 
-    console.log(req.body)
-    const { body } = await got.post('http://127.0.0.1:8080/api/productos', {
-        json: req.body,
-        responseType: 'json'
-    })
+    try {
 
-    console.log(body)
+        const { body } = await got.post('http://127.0.0.1:8080/api/productos', {
+            json: req.body,
+            responseType: 'json'
+        })
 
-    res.redirect('/productos')
+        console.log(body)
+
+        res.redirect('/productos')
+    }
+    catch (error) {
+        res.render('error', { layout: 'index', error })
+    }
 });
 
-app.listen(port, () => console.log(`App listening to port ${port}`));
+app.listen(port, () => console.log(`WebServer ejecutandose en el puerto ${port}`));
